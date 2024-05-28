@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strona Główna</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='leaflet.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='leaflet.js') }}"></script>
+    <style>
+        #map {
+            height: 600px;
+            /* Dodanie szerokości */
+            background-color: #f0f0f0;
+            /* Dodanie tła */
+        }
+
+        #info {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            width: 500px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <body>
+        {% if current_user %}
+        <h1>Witaj z powrotem, {{ current_user['username'] }}!</h1>
+        <div class="row">
+            <div id="map"></div>
+            <div id="info"></div>
+        </div>
+        <a href="{{ url_for('auth.logout') }}"><button>Wyloguj</button></a>
+        <script src="{{ url_for('static', filename='map.js') }}"></script>
+        {% else %}
+        <h1>Witaj na stronie naszego projektu</h1>
+        <a href="{{ url_for('auth.login') }}"><button>Zaloguj się</button></a>
+        <a href="{{ url_for('auth.register') }}"><button>Zarejestruj się</button></a>
+        {% endif %}
+
+
+    </body>
+
+</html>

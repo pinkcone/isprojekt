@@ -1,0 +1,7 @@
+Flask
+SQLAlchemy
+Flask-Migrate
+Flask-JWT-Extended
+pandas
+openpyxl
+xlrd
