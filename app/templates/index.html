@@ -11,9 +11,7 @@
     <style>
         #map {
             height: 600px;
-            /* Dodanie szerokości */
             background-color: #f0f0f0;
-            /* Dodanie tła */
         }
 
         #info {
@@ -22,27 +20,106 @@
             font-weight: bold;
             width: 500px;
         }
+
+        .selectors {
+            margin-top: 20px;
+        }
+
+        .selectors select {
+            margin-right: 10px;
+        }
     </style>
 </head>
 
 <body>
+    {% if current_user %}
+    <h1>Witaj z powrotem, {{ current_user['username'] }}!</h1>
+    
+    <div class="selectors">
+        <select id="regionSelect">
+            <option value="POLSKA">POLSKA</option>
+            <option value="DOLNOŚLĄSKIE">DOLNOŚLĄSKIE</option>
+            <option value="KUJAWSKO-POMORSKIE">KUJAWSKO-POMORSKIE</option>
+            <option value="LUBELSKIE">LUBELSKIE</option>
+            <option value="LUBUSKIE">LUBUSKIE</option>
+            <option value="ŁÓDZKIE">ŁÓDZKIE</option>
+            <option value="MAŁOPOLSKIE">MAŁOPOLSKIE</option>
+            <option value="MAZOWIECKIE">MAZOWIECKIE</option>
+            <option value="OPOLSKIE">OPOLSKIE</option>
+            <option value="PODKARPACKIE">PODKARPACKIE</option>
+            <option value="PODLASKIE">PODLASKIE</option>
+            <option value="POMORSKIE">POMORSKIE</option>
+            <option value="ŚLĄSKIE">ŚLĄSKIE</option>
+            <option value="ŚWIĘTOKRZYSKIE">ŚWIĘTOKRZYSKIE</option>
+            <option value="WARMIŃSKO-MAZURSKIE">WARMIŃSKO-MAZURSKIE</option>
+            <option value="WIELKOPOLSKIE">WIELKOPOLSKIE</option>
+            <option value="ZACHODNIOPOMORSKIE">ZACHODNIOPOMORSKIE</option>
+        </select>
+        <select id="monthSelect">
+            <option value="1">Styczeń</option>
+            <option value="2">Luty</option>
+            <option value="3">Marzec</option>
+            <option value="4">Kwiecień</option>
+            <option value="5">Maj</option>
+            <option value="6">Czerwiec</option>
+            <option value="7">Lipiec</option>
+            <option value="8">Sierpień</option>
+            <option value="9">Wrzesień</option>
+            <option value="10">Październik</option>
+            <option value="11">Listopad</option>
+            <option value="12">Grudzień</option>
+        </select>
+        <select id="yearSelect">
+            <option value="2012">2012</option>
+            <option value="2013">2013</option>
+            <option value="2014">2014</option>
+            <option value="2015">2015</option>
+            <option value="2016">2016</option>
+            <option value="2017">2017</option>
+            <option value="2018">2018</option>
+            <option value="2019">2019</option>
+            <option value="2020">2020</option>
+            <option value="2021">2021</option>
+            <option value="2022">2022</option>
+            <option value="2023">2023</option>
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+        </select>
+        <button onclick="fetchData()">Pobierz dane</button>
+    </div>
+    <div class="row">
+        <div id="map"></div>
+        <div id="info"></div>
+    </div>
+    <a href="{{ url_for('auth.logout') }}"><button>Wyloguj</button></a>
+    <script src="{{ url_for('static', filename='map.js') }}"></script>
+    {% else %}
+    <h1>Witaj na stronie naszego projektu</h1>
+    <a href="{{ url_for('auth.login') }}"><button>Zaloguj się</button></a>
+    <a href="{{ url_for('auth.register') }}"><button>Zarejestruj się</button></a>
+    {% endif %}
+    <script>
+        function fetchData() {
+            const region = document.getElementById('regionSelect').value;
+            const month = document.getElementById('monthSelect').value;
+            const year = document.getElementById('yearSelect').value;
 
-    <body>
-        {% if current_user %}
-        <h1>Witaj z powrotem, {{ current_user['username'] }}!</h1>
-        <div class="row">
-            <div id="map"></div>
-            <div id="info"></div>
-        </div>
-        <a href="{{ url_for('auth.logout') }}"><button>Wyloguj</button></a>
-        <script src="{{ url_for('static', filename='map.js') }}"></script>
-        {% else %}
-        <h1>Witaj na stronie naszego projektu</h1>
-        <a href="{{ url_for('auth.login') }}"><button>Zaloguj się</button></a>
-        <a href="{{ url_for('auth.register') }}"><button>Zarejestruj się</button></a>
-        {% endif %}
-
-
-    </body>
+            fetch(`/get_data?region=${region}&month=${month}&year=${year}`)
+                .then(response => response.json())
+                .then(data => {
+                    const infoDiv = document.getElementById('info');
+                    infoDiv.innerHTML = `
+                        <p>Region: ${region}</p>
+                        <p>Rok: ${year}</p>
+                        <p>Miesiąc: ${month}</p>
+                        <p>Inflacja: ${data.inflation}</p>
+                        <p>PKB: ${data.gdp}</p>
+                        <p>Bezrobocie: ${data.unemployment}</p>
+                    `;
+                })
+                .catch(error => console.error('Błąd:', error));
+        }
+    </script>
+</body>
 
 </html>

@@ -1,0 +1,594 @@
+[
+    {
+        "miesiac": "sty 12",
+        "inflacja": 104.1
+    },
+    {
+        "miesiac": "lut 12",
+        "inflacja": 104.3
+    },
+    {
+        "miesiac": "mar 12",
+        "inflacja": 103.9
+    },
+    {
+        "miesiac": "kwi 12",
+        "inflacja": 104
+    },
+    {
+        "miesiac": "maj 12",
+        "inflacja": 103.6
+    },
+    {
+        "miesiac": "cze 12",
+        "inflacja": 104.3
+    },
+    {
+        "miesiac": "lip 12",
+        "inflacja": 104
+    },
+    {
+        "miesiac": "sie 12",
+        "inflacja": 103.8
+    },
+    {
+        "miesiac": "wrz 12",
+        "inflacja": 103.8
+    },
+    {
+        "miesiac": "paź 12",
+        "inflacja": 103.4
+    },
+    {
+        "miesiac": "lis 12",
+        "inflacja": 102.8
+    },
+    {
+        "miesiac": "gru 12",
+        "inflacja": 102.4
+    },
+    {
+        "miesiac": "sty 13",
+        "inflacja": 101.7
+    },
+    {
+        "miesiac": "lut 13",
+        "inflacja": 101.3
+    },
+    {
+        "miesiac": "mar 13",
+        "inflacja": 101
+    },
+    {
+        "miesiac": "kwi 13",
+        "inflacja": 100.8
+    },
+    {
+        "miesiac": "maj 13",
+        "inflacja": 100.5
+    },
+    {
+        "miesiac": "cze 13",
+        "inflacja": 100.2
+    },
+    {
+        "miesiac": "lip 13",
+        "inflacja": 101.1
+    },
+    {
+        "miesiac": "sie 13",
+        "inflacja": 101.1
+    },
+    {
+        "miesiac": "wrz 13",
+        "inflacja": 101
+    },
+    {
+        "miesiac": "paź 13",
+        "inflacja": 100.8
+    },
+    {
+        "miesiac": "lis 13",
+        "inflacja": 100.6
+    },
+    {
+        "miesiac": "gru 13",
+        "inflacja": 100.7
+    },
+    {
+        "miesiac": "sty 14",
+        "inflacja": 100.5
+    },
+    {
+        "miesiac": "lut 14",
+        "inflacja": 100.7
+    },
+    {
+        "miesiac": "mar 14",
+        "inflacja": 100.7
+    },
+    {
+        "miesiac": "kwi 14",
+        "inflacja": 100.3
+    },
+    {
+        "miesiac": "maj 14",
+        "inflacja": 100.2
+    },
+    {
+        "miesiac": "cze 14",
+        "inflacja": 100.3
+    },
+    {
+        "miesiac": "lip 14",
+        "inflacja": 99.8
+    },
+    {
+        "miesiac": "sie 14",
+        "inflacja": 99.7
+    },
+    {
+        "miesiac": "wrz 14",
+        "inflacja": 99.7
+    },
+    {
+        "miesiac": "paź 14",
+        "inflacja": 99.4
+    },
+    {
+        "miesiac": "lis 14",
+        "inflacja": 99.4
+    },
+    {
+        "miesiac": "gru 14",
+        "inflacja": 99
+    },
+    {
+        "miesiac": "sty 15",
+        "inflacja": 98.6
+    },
+    {
+        "miesiac": "lut 15",
+        "inflacja": 98.4
+    },
+    {
+        "miesiac": "mar 15",
+        "inflacja": 98.5
+    },
+    {
+        "miesiac": "kwi 15",
+        "inflacja": 98.9
+    },
+    {
+        "miesiac": "maj 15",
+        "inflacja": 99.1
+    },
+    {
+        "miesiac": "cze 15",
+        "inflacja": 99.2
+    },
+    {
+        "miesiac": "lip 15",
+        "inflacja": 99.3
+    },
+    {
+        "miesiac": "sie 15",
+        "inflacja": 99.4
+    },
+    {
+        "miesiac": "wrz 15",
+        "inflacja": 99.2
+    },
+    {
+        "miesiac": "paź 15",
+        "inflacja": 99.3
+    },
+    {
+        "miesiac": "lis 15",
+        "inflacja": 99.4
+    },
+    {
+        "miesiac": "gru 15",
+        "inflacja": 99.5
+    },
+    {
+        "miesiac": "sty 16",
+        "inflacja": 99.1
+    },
+    {
+        "miesiac": "lut 16",
+        "inflacja": 99.2
+    },
+    {
+        "miesiac": "mar 16",
+        "inflacja": 99.1
+    },
+    {
+        "miesiac": "kwi 16",
+        "inflacja": 98.9
+    },
+    {
+        "miesiac": "maj 16",
+        "inflacja": 99.1
+    },
+    {
+        "miesiac": "cze 16",
+        "inflacja": 99.2
+    },
+    {
+        "miesiac": "lip 16",
+        "inflacja": 99.1
+    },
+    {
+        "miesiac": "sie 16",
+        "inflacja": 99.2
+    },
+    {
+        "miesiac": "wrz 16",
+        "inflacja": 99.5
+    },
+    {
+        "miesiac": "paź 16",
+        "inflacja": 99.8
+    },
+    {
+        "miesiac": "lis 16",
+        "inflacja": 100
+    },
+    {
+        "miesiac": "gru 16",
+        "inflacja": 100.8
+    },
+    {
+        "miesiac": "sty 17",
+        "inflacja": 101.7
+    },
+    {
+        "miesiac": "lut 17",
+        "inflacja": 102.2
+    },
+    {
+        "miesiac": "mar 17",
+        "inflacja": 102
+    },
+    {
+        "miesiac": "kwi 17",
+        "inflacja": 102
+    },
+    {
+        "miesiac": "maj 17",
+        "inflacja": 101.9
+    },
+    {
+        "miesiac": "cze 17",
+        "inflacja": 101.5
+    },
+    {
+        "miesiac": "lip 17",
+        "inflacja": 101.7
+    },
+    {
+        "miesiac": "sie 17",
+        "inflacja": 101.8
+    },
+    {
+        "miesiac": "wrz 17",
+        "inflacja": 102.2
+    },
+    {
+        "miesiac": "paź 17",
+        "inflacja": 102.1
+    },
+    {
+        "miesiac": "lis 17",
+        "inflacja": 102.5
+    },
+    {
+        "miesiac": "gru 17",
+        "inflacja": 102.1
+    },
+    {
+        "miesiac": "sty 18",
+        "inflacja": 101.9
+    },
+    {
+        "miesiac": "lut 18",
+        "inflacja": 101.4
+    },
+    {
+        "miesiac": "mar 18",
+        "inflacja": 101.3
+    },
+    {
+        "miesiac": "kwi 18",
+        "inflacja": 101.6
+    },
+    {
+        "miesiac": "maj 18",
+        "inflacja": 101.7
+    },
+    {
+        "miesiac": "cze 18",
+        "inflacja": 102
+    },
+    {
+        "miesiac": "lip 18",
+        "inflacja": 102
+    },
+    {
+        "miesiac": "sie 18",
+        "inflacja": 102
+    },
+    {
+        "miesiac": "wrz 18",
+        "inflacja": 101.9
+    },
+    {
+        "miesiac": "paź 18",
+        "inflacja": 101.8
+    },
+    {
+        "miesiac": "lis 18",
+        "inflacja": 101.3
+    },
+    {
+        "miesiac": "gru 18",
+        "inflacja": 101.1
+    },
+    {
+        "miesiac": "sty 19",
+        "inflacja": 100.7
+    },
+    {
+        "miesiac": "lut 19",
+        "inflacja": 101.2
+    },
+    {
+        "miesiac": "mar 19",
+        "inflacja": 101.7
+    },
+    {
+        "miesiac": "kwi 19",
+        "inflacja": 102.2
+    },
+    {
+        "miesiac": "maj 19",
+        "inflacja": 102.4
+    },
+    {
+        "miesiac": "cze 19",
+        "inflacja": 102.6
+    },
+    {
+        "miesiac": "lip 19",
+        "inflacja": 102.9
+    },
+    {
+        "miesiac": "sie 19",
+        "inflacja": 102.9
+    },
+    {
+        "miesiac": "wrz 19",
+        "inflacja": 102.6
+    },
+    {
+        "miesiac": "paź 19",
+        "inflacja": 102.5
+    },
+    {
+        "miesiac": "lis 19",
+        "inflacja": 102.6
+    },
+    {
+        "miesiac": "gru 19",
+        "inflacja": 103.4
+    },
+    {
+        "miesiac": "sty 20",
+        "inflacja": 104.3
+    },
+    {
+        "miesiac": "lut 20",
+        "inflacja": 104.7
+    },
+    {
+        "miesiac": "mar 20",
+        "inflacja": 104.6
+    },
+    {
+        "miesiac": "kwi 20",
+        "inflacja": 103.4
+    },
+    {
+        "miesiac": "maj 20",
+        "inflacja": 102.9
+    },
+    {
+        "miesiac": "cze 20",
+        "inflacja": 103.3
+    },
+    {
+        "miesiac": "lip 20",
+        "inflacja": 103
+    },
+    {
+        "miesiac": "sie 20",
+        "inflacja": 102.9
+    },
+    {
+        "miesiac": "wrz 20",
+        "inflacja": 103.2
+    },
+    {
+        "miesiac": "paź 20",
+        "inflacja": 103.1
+    },
+    {
+        "miesiac": "lis 20",
+        "inflacja": 103
+    },
+    {
+        "miesiac": "gru 20",
+        "inflacja": 102.4
+    },
+    {
+        "miesiac": "sty 21",
+        "inflacja": 102.6
+    },
+    {
+        "miesiac": "lut 21",
+        "inflacja": 102.4
+    },
+    {
+        "miesiac": "mar 21",
+        "inflacja": 103.2
+    },
+    {
+        "miesiac": "kwi 21",
+        "inflacja": 104.3
+    },
+    {
+        "miesiac": "maj 21",
+        "inflacja": 104.7
+    },
+    {
+        "miesiac": "cze 21",
+        "inflacja": 104.4
+    },
+    {
+        "miesiac": "lip 21",
+        "inflacja": 105
+    },
+    {
+        "miesiac": "sie 21",
+        "inflacja": 105.5
+    },
+    {
+        "miesiac": "wrz 21",
+        "inflacja": 105.9
+    },
+    {
+        "miesiac": "paź 21",
+        "inflacja": 106.8
+    },
+    {
+        "miesiac": "lis 21",
+        "inflacja": 107.8
+    },
+    {
+        "miesiac": "gru 21",
+        "inflacja": 108.6
+    },
+    {
+        "miesiac": "sty 22",
+        "inflacja": 109.4
+    },
+    {
+        "miesiac": "lut 22",
+        "inflacja": 108.5
+    },
+    {
+        "miesiac": "mar 22",
+        "inflacja": 111
+    },
+    {
+        "miesiac": "kwi 22",
+        "inflacja": 112.4
+    },
+    {
+        "miesiac": "maj 22",
+        "inflacja": 113.9
+    },
+    {
+        "miesiac": "cze 22",
+        "inflacja": 115.5
+    },
+    {
+        "miesiac": "lip 22",
+        "inflacja": 115.6
+    },
+    {
+        "miesiac": "sie 22",
+        "inflacja": 116.1
+    },
+    {
+        "miesiac": "wrz 22",
+        "inflacja": 117.2
+    },
+    {
+        "miesiac": "paź 22",
+        "inflacja": 117.9
+    },
+    {
+        "miesiac": "lis 22",
+        "inflacja": 117.5
+    },
+    {
+        "miesiac": "gru 22",
+        "inflacja": 116.6
+    },
+    {
+        "miesiac": "sty 23",
+        "inflacja": 116.6
+    },
+    {
+        "miesiac": "lut 23",
+        "inflacja": 118.4
+    },
+    {
+        "miesiac": "mar 23",
+        "inflacja": 116.1
+    },
+    {
+        "miesiac": "kwi 23",
+        "inflacja": 114.7
+    },
+    {
+        "miesiac": "maj 23",
+        "inflacja": 113
+    },
+    {
+        "miesiac": "cze 23",
+        "inflacja": 111.5
+    },
+    {
+        "miesiac": "lip 23",
+        "inflacja": 110.8
+    },
+    {
+        "miesiac": "sie 23",
+        "inflacja": 110.1
+    },
+    {
+        "miesiac": "wrz 23",
+        "inflacja": 108.2
+    },
+    {
+        "miesiac": "paź 23",
+        "inflacja": 106.6
+    },
+    {
+        "miesiac": "lis 23",
+        "inflacja": 106.6
+    },
+    {
+        "miesiac": "gru 23",
+        "inflacja": 106.2
+    },
+    {
+        "miesiac": "sty 24",
+        "inflacja": 103.7
+    },
+    {
+        "miesiac": "lut 24",
+        "inflacja": 102.8
+    },
+    {
+        "miesiac": "mar 24",
+        "inflacja": 102
+    },
+    {
+        "miesiac": "kwi 24",
+        "inflacja": 102.4
+    }
+]
