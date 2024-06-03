@@ -81,3 +81,39 @@ button:hover {
     justify-content: center;
     align-items: center;
 }
+.meta_data{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: start;
+
+}
+.meta_data p{
+    margin: 10px;
+}
+.meta_value{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+}
+#map {
+    height: 600px;
+    background-color: #f0f0f0;
+}
+
+#info {
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    width: 500px;
+    margin-left: 20px;
+}
+
+.selectors {
+    margin-top: 20px;
+}
+
+.selectors select {
+    margin-right: 10px;
+}

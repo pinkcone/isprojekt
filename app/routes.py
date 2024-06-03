@@ -39,13 +39,27 @@ def get_data():
     gdp_value = gdp.value if gdp else 'Brak danych'
 
     # Pobierz dane bezrobocia
-    unemployment = db.session.query(UnemploymentData.unemployment_rate).filter_by(year=year, month=month, region=region).first()
-    unemployment_value = unemployment.unemployment_rate if unemployment else 'Brak danych'
+    unemployment_data = db.session.query(UnemploymentData).filter_by(year=year, month=month, region=region).first()
+    unemployment_value = unemployment_data.unemployment_rate if unemployment_data else 'Brak danych'
+    unemployed_value = unemployment_data.unemployed if unemployment_data else 'Brak danych'
+
+    # Pobierz dane bezrobocia dla wykresu
+    unemployment_data_all = db.session.query(UnemploymentData).filter_by(region=region).all()
+    unemployment_data_list = [
+        {
+            'year': data.year,
+            'month': data.month,
+            'unemployed': data.unemployed,
+            'unemployment_rate': data.unemployment_rate
+        } for data in unemployment_data_all
+    ]
 
     data = {
         'inflation': inflation_value,
         'gdp': gdp_value,
-        'unemployment': unemployment_value
+        'unemployment_rate': unemployment_value,
+        'unemployed': unemployed_value,
+        'unemployment_data': unemployment_data_list
     }
 
     return jsonify(data)
