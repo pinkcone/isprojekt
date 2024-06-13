@@ -22,7 +22,7 @@ def get_data():
     year = int(request.args.get('year'))
 
     # Pobierz dane inflacji
-    inflation = db.session.query(Inflation.value).filter_by(year=year%1000, month=month).first()
+    inflation = db.session.query(Inflation.value).filter_by(year=year, month=month).first()
     inflation_value = inflation.value if inflation else 'Brak danych'
 
     # Pobierz dane PKB
@@ -54,12 +54,35 @@ def get_data():
         } for data in unemployment_data_all
     ]
 
+    # Pobierz wszystkie dane inflacji
+    inflation_data_all = db.session.query(Inflation).all()
+    inflation_data_list = [
+        {
+            'year': data.year,
+            'month': data.month,
+            'value': data.value
+        } for data in inflation_data_all
+    ]
+
+    # Pobierz wszystkie dane PKB
+    gdp_data_all = db.session.query(GDP).all()
+    gdp_data_list = [
+        {
+            'year': data.year,
+            'quarter': data.quarter,
+            'value': data.value
+        } for data in gdp_data_all
+    ]
+
     data = {
         'inflation': inflation_value,
         'gdp': gdp_value,
         'unemployment_rate': unemployment_value,
         'unemployed': unemployed_value,
-        'unemployment_data': unemployment_data_list
+        'unemployment_data': unemployment_data_list,
+        'inflation_data': inflation_data_list,
+        'gdp_data': gdp_data_list
     }
 
     return jsonify(data)
+

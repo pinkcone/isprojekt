@@ -2,12 +2,12 @@
 var map = L.map('map', {
     center: [52.237049, 19.145136],
     zoom: 6,
-    zoomControl: false, // Wyłączenie kontroli powiększania
-    dragging: false,    // Wyłączenie przeciągania
-    scrollWheelZoom: false, // Wyłączenie powiększania kółkiem myszy
-    doubleClickZoom: false, // Wyłączenie powiększania podwójnym kliknięciem
-    boxZoom: false,         // Wyłączenie zoomowania za pomocą pola
-    touchZoom: false        // Wyłączenie zoomowania dotykowego
+    zoomControl: false,
+    dragging: false,
+    scrollWheelZoom: false,
+    doubleClickZoom: false,
+    boxZoom: false,
+    touchZoom: false
 });
 
 // URL do pliku GeoJSON z województwami Polski
@@ -25,8 +25,28 @@ function style(feature) {
     };
 }
 
-var highlightedLayer;
-var selectedRegion = '';
+var highlightedLayers = [];
+var selectedRegions = [];
+
+// Predefined color dictionary for regions
+var regionColors = {
+    'Dolnośląskie': '#FF5733',
+    'Kujawsko-Pomorskie': '#33FF57',
+    'Lubelskie': '#3357FF',
+    'Lubuskie': '#FF33A1',
+    'Łódzkie': '#FF8333',
+    'Małopolskie': '#33FFF8',
+    'Mazowieckie': '#D433FF',
+    'Opolskie': '#A1FF33',
+    'Podkarpackie': '#FF3357',
+    'Podlaskie': '#33A1FF',
+    'Pomorskie': '#A133FF',
+    'Śląskie': '#33FFA1',
+    'Świętokrzyskie': '#FF5733',
+    'Warmińsko-Mazurskie': '#33FF57',
+    'Wielkopolskie': '#3357FF',
+    'Zachodniopomorskie': '#FF33A1'
+};
 
 // Inicjalizacja wykresu
 var ctx = document.getElementById('unemploymentChart').getContext('2d');
@@ -34,15 +54,10 @@ var unemploymentChart = new Chart(ctx, {
     type: 'line',
     data: {
         labels: [],
-        datasets: [{
-            label: 'Liczba bezrobotnych',
-            data: [],
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            borderColor: 'rgba(75, 192, 192, 1)',
-            borderWidth: 1
-        }]
+        datasets: []
     },
     options: {
+        maintainAspectRatio: false, // Ensure the chart scales correctly
         scales: {
             y: {
                 beginAtZero: true
@@ -52,13 +67,94 @@ var unemploymentChart = new Chart(ctx, {
 });
 
 // Funkcja do aktualizacji wykresu
-function updateChart(data) {
-    var labels = data.map(item => `${item.year}-${item.month}`);
-    var values = data.map(item => item.unemployed);
+function updateChart() {
+    const startMonth = document.getElementById('startMonthSelect').value;
+    const startYear = document.getElementById('startYearSelect').value;
+    const endMonth = document.getElementById('endMonthSelect').value;
+    const endYear = document.getElementById('endYearSelect').value;
+    const dataType = document.getElementById('dataTypeSelect').value;
 
-    unemploymentChart.data.labels = labels;
-    unemploymentChart.data.datasets[0].data = values;
-    unemploymentChart.update();
+    if (!startMonth || !startYear) {
+        alert('Wybierz początkową datę!');
+        return;
+    }
+
+    if (!endMonth || !endYear) {
+        // Only display numerical data if only start date is selected
+        displayNumericalData();
+        return;
+    }
+
+    unemploymentChart.data.datasets = []; // Clear existing datasets
+    unemploymentChart.data.labels = []; // Clear existing labels
+
+    let allLabels = new Set();
+    let regionsToFetch = selectedRegions.length > 0 ? selectedRegions : ['POLSKA'];
+
+    const fetchDataPromises = regionsToFetch.map(region => {
+        return fetch(`/get_data?region=${region}&month=${startMonth}&year=${startYear}`)
+            .then(response => response.json())
+            .then(data => {
+                const filteredData = filterDataByDateRange(data.unemployment_data, startMonth, startYear, endMonth, endYear);
+                const labels = filteredData.map(item => `${item.year}-${item.month}`);
+                labels.forEach(label => allLabels.add(label));
+
+                var color = regionColors[region] || '#000000'; // Default to black for POLSKA
+                var dataset = {
+                    label: `${dataType.charAt(0).toUpperCase() + dataType.slice(1)} (${region})`,
+                    data: filteredData.map(item => item[dataType]),
+                    backgroundColor: color,
+                    borderColor: color,
+                    borderWidth: 1,
+                    fill: false
+                };
+
+                unemploymentChart.data.datasets.push(dataset);
+
+                // Add GDP and inflation if selected and if POLSKA
+                if (region === 'POLSKA') {
+                    if (dataType === 'gdp') {
+                        data.gdp_data.forEach(gdpEntry => {
+                            const gdpValue = gdpEntry.value;
+                            unemploymentChart.data.datasets.push({
+                                label: `PKB (${gdpEntry.year} ${gdpEntry.quarter})`,
+                                data: Array.from(allLabels).map(label => {
+                                    const [year, month] = label.split('-');
+                                    return gdpEntry.year == year ? gdpValue : null;
+                                }),
+                                backgroundColor: '#FFA500', // Orange for GDP
+                                borderColor: '#FFA500',
+                                borderWidth: 1,
+                                fill: false
+                            });
+                        });
+                    } else if (dataType === 'inflation') {
+                        data.inflation_data.forEach(inflationEntry => {
+                            const inflationValue = inflationEntry.value;
+                            unemploymentChart.data.datasets.push({
+                                label: `Inflacja (${inflationEntry.year}-${inflationEntry.month})`,
+                                data: Array.from(allLabels).map(label => {
+                                    const [year, month] = label.split('-');
+                                    return inflationEntry.year == year && inflationEntry.month == month ? inflationValue : null;
+                                }),
+                                backgroundColor: '#FF00FF', // Magenta for Inflation
+                                borderColor: '#FF00FF',
+                                borderWidth: 1,
+                                fill: false
+                            });
+                        });
+                    }
+                }
+            })
+            .catch(error => console.error('Błąd:', error));
+    });
+
+    Promise.all(fetchDataPromises).then(() => {
+        unemploymentChart.data.labels = Array.from(allLabels).sort();
+        unemploymentChart.update();
+        document.getElementById('chartContainer').style.display = 'block'; // Ensure chart container is visible
+        document.getElementById('info').style.display = 'none'; // Hide numerical data
+    });
 }
 
 // Funkcja do filtrowania danych na podstawie przedziału czasowego
@@ -71,99 +167,83 @@ function filterDataByDateRange(data, startMonth, startYear, endMonth, endYear) {
     });
 }
 
-// Funkcja do pobierania danych z serwera
-function fetchData() {
-    const month = document.getElementById('startMonthSelect').value;
-    const year = document.getElementById('startYearSelect').value;
-
+// Funkcja do wyświetlania danych liczbowych
+function displayNumericalData() {
     const startMonth = document.getElementById('startMonthSelect').value;
     const startYear = document.getElementById('startYearSelect').value;
-    const endMonth = document.getElementById('endMonthSelect').value;
-    const endYear = document.getElementById('endYearSelect').value;
+    const dataType = document.getElementById('dataTypeSelect').value;
 
-    if (!selectedRegion) {
-        alert('Wybierz region na mapie!');
-        return;
-    }
+    document.getElementById('info').innerHTML = ''; // Clear existing numerical data
 
-    fetch(`/get_data?region=${selectedRegion}&month=${month}&year=${year}`)
-        .then(response => response.json())
-        .then(data => {
-            const infoDiv = document.getElementById('info');
-            const chartContainer = document.getElementById('chartContainer');
-            if (startMonth && startYear && endMonth && endYear) {
-                infoDiv.style.display = 'none';
-                chartContainer.style.display = 'block';
-                const filteredData = filterDataByDateRange(data.unemployment_data, startMonth, startYear, endMonth, endYear);
-                updateChart(filteredData);
-            } else {
-                chartContainer.style.display = 'none';
-                if (selectedRegion === 'POLSKA') {
-                    infoDiv.innerHTML = `
-                        <p>Region: ${selectedRegion}</p>
-                        <p>Rok: ${year}</p>
-                        <p>Miesiąc: ${month}</p>
-                        <p>Inflacja: ${data.inflation}</p>
-                        <p>PKB: ${data.gdp}</p>
-                        <p>Liczba bezrobotnych: ${data.unemployed}</p>
-                        <p>Stopa bezrobocia: ${data.unemployment_rate}</p>
-                    `;
-                } else {
-                    infoDiv.innerHTML = `
-                        <p>Region: ${selectedRegion}</p>
-                        <p>Rok: ${year}</p>
-                        <p>Miesiąc: ${month}</p>
-                        <p>Liczba bezrobotnych: ${data.unemployed}</p>
-                        <p>Stopa bezrobocia: ${data.unemployment_rate}</p>
-                    `;
-                }
-                infoDiv.style.display = 'block';
-            }
-        })
-        .catch(error => console.error('Błąd:', error));
+    let regionsToFetch = selectedRegions.length > 0 ? selectedRegions : ['POLSKA'];
+
+    const fetchDataPromises = regionsToFetch.map(region => {
+        return fetch(`/get_data?region=${region}&month=${startMonth}&year=${startYear}`)
+            .then(response => response.json())
+            .then(data => {
+                updateInfo(data, region, dataType);
+            })
+            .catch(error => console.error('Błąd:', error));
+    });
+
+    Promise.all(fetchDataPromises).then(() => {
+        document.getElementById('chartContainer').style.display = 'none'; // Hide chart container
+        document.getElementById('info').style.display = 'block'; // Show numerical data
+    });
+}
+
+// Funkcja do aktualizacji informacji
+function updateInfo(data, region, dataType) {
+    var infoDiv = document.getElementById('info');
+    var regionDiv = document.createElement('div');
+    regionDiv.innerHTML = `
+        <h3>Region: ${region}</h3>
+        <p>${dataType.charAt(0).toUpperCase() + dataType.slice(1)}: ${data[dataType]}</p>
+    `;
+    infoDiv.appendChild(regionDiv);
 }
 
 // Podświetlanie województwa po kliknięciu
 function highlightFeature(e) {
     var layer = e.target;
+    var region = layer.feature.properties.name;
 
-    if (highlightedLayer === layer) {
-        // Jeśli kliknięto zaznaczone województwo, resetuj wybór do "POLSKA"
-        geojson.resetStyle(highlightedLayer);
-        highlightedLayer = null;
-        selectedRegion = 'POLSKA';
-        var infoDiv = document.getElementById('info');
-        infoDiv.innerHTML = 'Województwo: POLSKA';
-        fetchData(); // Pobierz dane dla "POLSKA"
+    if (selectedRegions.includes(region)) {
+        // Usuń region z wybranych i zresetuj styl
+        selectedRegions = selectedRegions.filter(r => r !== region);
+        geojson.resetStyle(layer);
+        highlightedLayers = highlightedLayers.filter(l => l !== layer);
+
+        // Zaktualizuj wykres
+        unemploymentChart.data.datasets = unemploymentChart.data.datasets.filter(ds => !ds.label.includes(region));
+        unemploymentChart.update();
+
+        // Show POLSKA data if no regions are selected
+        if (selectedRegions.length === 0) {
+            updateChart();
+        }
+
         return;
     }
 
-    if (highlightedLayer) {
-        geojson.resetStyle(highlightedLayer);
+    if (!regionColors[region]) {
+        alert('Kolor nie został zdefiniowany dla wybranego regionu.');
+        return;
     }
 
+    selectedRegions.push(region);
+
     layer.setStyle({
-        fillColor: 'green',
-        weight: 5, // Zwiększenie szerokości linii obwodowej
-        color: 'black', // Czarny kolor linii obwodowej
+        fillColor: regionColors[region],
+        weight: 5,
+        color: 'black',
         dashArray: '',
         fillOpacity: 0.7
     });
 
-    // Przenieś zaznaczoną warstwę na wierzch
-    if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-        layer.bringToFront();
-    }
+    highlightedLayers.push(layer);
 
-    highlightedLayer = layer;
-
-    // Wyświetlanie nazwy województwa
-    selectedRegion = layer.feature.properties.name;
-    var infoDiv = document.getElementById('info');
-    infoDiv.innerHTML = 'Województwo: ' + selectedRegion;
-
-    // Automatyczne pobieranie danych po kliknięciu
-    fetchData();
+    updateChart();
 }
 
 // Resetowanie podświetlenia
@@ -194,25 +274,21 @@ fetch(geojsonUrl)
 
 // Dodanie nasłuchiwaczy zdarzeń na selektory
 document.getElementById('startMonthSelect').addEventListener('change', function() {
-    if (selectedRegion) {
-        fetchData();
-    }
+    updateChart();
 });
 
 document.getElementById('startYearSelect').addEventListener('change', function() {
-    if (selectedRegion) {
-        fetchData();
-    }
+    updateChart();
 });
 
 document.getElementById('endMonthSelect').addEventListener('change', function() {
-    if (selectedRegion) {
-        fetchData();
-    }
+    updateChart();
 });
 
 document.getElementById('endYearSelect').addEventListener('change', function() {
-    if (selectedRegion) {
-        fetchData();
-    }
+    updateChart();
+});
+
+document.getElementById('dataTypeSelect').addEventListener('change', function() {
+    updateChart();
 });
