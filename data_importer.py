@@ -1,7 +1,7 @@
 import re
 import pandas as pd
 import os
-from app.models import UnemploymentData, Inflation, GDP
+from app.models import UnemploymentData, Inflation, GDP, PensionData, HousingPriceData
 import json
 
 
@@ -170,3 +170,91 @@ def import_gdp_data(session):
 
     session.commit()
     print("Dane PKB zaimportowane pomyślnie.")
+
+def import_pension_data(session):
+    pension_file = os.path.join(current_dir, 'WYNA_2860_XTAB_20240616180501.xlsx')
+    try:
+        df = pd.read_excel(pension_file, sheet_name='TABLICA', header=0)
+    except Exception as e:
+        print(f"Error reading Excel file: {e}")
+        return
+
+    print("Excel file loaded successfully")
+
+    # Przetwarzanie danych
+    years = [2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023]
+    columns = ['Kod', 'Nazwa'] + years
+
+    df.columns = columns
+
+    for index, row in df.iterrows():
+        try:
+            region = row['Nazwa'].strip().upper()
+            for year in years:
+                amount = row[year]
+                # Sprawdź, czy rekord już istnieje
+                existing_record = session.query(PensionData).filter_by(year=year, region=region).first()
+                if not existing_record:
+                    pension_record = PensionData(
+                        year=year, 
+                        region=region, 
+                        amount=amount
+                    )
+                    session.add(pension_record)
+        except Exception as e:
+            print(f"Error processing row {index}: {e}")
+            continue
+
+    session.commit()
+    print("Dane emerytur zaimportowane pomyślnie.")
+    
+def import_housing_price_data(session):
+    housing_file = os.path.join(current_dir, 'RYNE_3775_XTAB_20240616180447.xlsx')
+    try:
+        df = pd.read_excel(housing_file, sheet_name='TABLICA', header=0)
+    except Exception as e:
+        print(f"Error reading Excel file: {e}")
+        return
+
+    print("Excel file loaded successfully")
+
+    # Usunięcie pierwszych trzech wierszy oraz kolumn z brakującymi wartościami
+    df = df.drop([0, 1, 2]).reset_index(drop=True)
+    
+    # Zmiana nazwy kolumn
+    columns = ['Kod', 'Nazwa', 'ogółem'] + list(df.columns[3:])
+    df.columns = columns
+
+    # Przekształcenie kolumn z nazwami lat
+    year_columns = [col for col in df.columns if re.match(r'Unnamed: \d+', col)]
+    year_columns_map = {old: str(2012 + i) for i, old in enumerate(year_columns)}
+    df = df.rename(columns=year_columns_map)
+    
+    # Zdefiniowanie lat
+    years = list(year_columns_map.values())
+
+    for index, row in df.iterrows():
+        try:
+            region = row['Nazwa']
+            if not isinstance(region, str):
+                continue
+            region = region.strip().upper()
+            for year in years:
+                price = row[year]
+                if pd.isna(price) or price == '-':
+                    continue
+                # Sprawdź, czy rekord już istnieje
+                existing_record = session.query(HousingPriceData).filter_by(year=int(year), region=region).first()
+                if not existing_record:
+                    housing_record = HousingPriceData(
+                        year=int(year), 
+                        region=region, 
+                        price=float(price)
+                    )
+                    session.add(housing_record)
+        except Exception as e:
+            print(f"Error processing row {index}: {e}")
+            continue
+
+    session.commit()
+    print("Dane cen mieszkań zaimportowane pomyślnie.")

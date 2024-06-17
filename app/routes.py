@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template, request, jsonify
 from flask_jwt_extended import get_jwt_identity, verify_jwt_in_request
-from app.models import UnemploymentData, Inflation, GDP
+from app.models import UnemploymentData, Inflation, GDP, PensionData, HousingPriceData
 from app import db
+import numpy as np
 
 main_bp = Blueprint('main', __name__)
 
@@ -15,74 +16,174 @@ def home():
         pass
     return render_template('index.html', current_user=current_user)
 
+def get_data_by_type(data_type, start_month, start_year, end_month, end_year, regions):
+    if data_type == 'inflation':
+        start_year_inflation = start_year % 1000
+        end_year_inflation = end_year % 1000
+
+        query = db.session.query(Inflation).filter(
+            ((Inflation.year == start_year_inflation) & (Inflation.month >= start_month)) |
+            ((Inflation.year > start_year_inflation) & (Inflation.year < end_year_inflation)) |
+            ((Inflation.year == end_year_inflation) & (Inflation.month <= end_month))
+        )
+
+        if start_year == end_year:
+            query = query.filter(
+                (Inflation.year == start_year_inflation) & (Inflation.month >= start_month) & (Inflation.month <= end_month)
+            )
+
+        data = query.all()
+        return [{'month': d.month, 'year': d.year + 2000, 'value': d.value, 'region': 'POLSKA'} for d in data]
+
+    elif data_type == 'gdp':
+        query = db.session.query(GDP).filter(
+            ((GDP.year == start_year) & ((GDP.quarter == 'Q1' and start_month <= 3) | 
+                                         (GDP.quarter == 'Q2' and start_month <= 6) | 
+                                         (GDP.quarter == 'Q3' and start_month <= 9) | 
+                                         (GDP.quarter == 'Q4' and start_month <= 12))) |
+            ((GDP.year > start_year) & (GDP.year < end_year)) |
+            ((GDP.year == end_year) & ((GDP.quarter == 'Q1' and end_month >= 1) | 
+                                       (GDP.quarter == 'Q2' and end_month >= 4) | 
+                                       (GDP.quarter == 'Q3' and end_month >= 7) | 
+                                       (GDP.quarter == 'Q4' and end_month >= 10)))
+        )
+
+        if start_year == end_year:
+            query = query.filter(
+                (GDP.year == start_year) & ((GDP.quarter == 'Q1' and start_month <= 3 and end_month >= 1) |
+                                            (GDP.quarter == 'Q2' and start_month <= 6 and end_month >= 4) |
+                                            (GDP.quarter == 'Q3' and start_month <= 9 and end_month >= 7) |
+                                            (GDP.quarter == 'Q4' and start_month <= 12 and end_month >= 10))
+            )
+
+        data = query.all()
+        gdp_monthly_data = []
+        for d in data:
+            quarter_to_months = {
+                'Q1': [1, 2, 3],
+                'Q2': [4, 5, 6],
+                'Q3': [7, 8, 9],
+                'Q4': [10, 11, 12]
+            }
+            months = quarter_to_months[d.quarter]
+            for month in months:
+                if (d.year == start_year and month < start_month) or (d.year == end_year and month > end_month):
+                    continue
+                gdp_monthly_data.append({'month': month, 'year': d.year, 'value': d.value / 3, 'region': 'POLSKA'})
+        return gdp_monthly_data
+
+    elif data_type in ['unemployment_rate', 'unemployed']:
+        query = db.session.query(UnemploymentData).filter(
+            ((UnemploymentData.year == start_year) & (UnemploymentData.month >= start_month)) |
+            ((UnemploymentData.year > start_year) & (UnemploymentData.year < end_year)) |
+            ((UnemploymentData.year == end_year) & (UnemploymentData.month <= end_month)),
+            UnemploymentData.region.in_(regions)
+        )
+
+        if start_year == end_year:
+            query = query.filter(
+                (UnemploymentData.year == start_year) & (UnemploymentData.month >= start_month) & (UnemploymentData.month <= end_month)
+            )
+
+        data = query.all()
+        return [{'month': d.month, 'year': d.year, 'region': d.region, 'value': getattr(d, data_type)} for d in data]
+
+    elif data_type == 'pension':
+        query = db.session.query(PensionData).filter(
+            PensionData.year >= start_year,
+            PensionData.year <= end_year,
+            PensionData.region.in_(regions)
+        )
+
+        data = query.all()
+        pension_monthly_data = []
+        for d in data:
+            for year in range(start_year, end_year + 1):
+                for month in range(1, 13):
+                    if (year == start_year and month < start_month) or (year == end_year and month > end_month):
+                        continue
+                    if d.year == year:
+                        pension_monthly_data.append({'month': month, 'year': year, 'region': d.region, 'value': d.amount})
+        return pension_monthly_data
+
+    elif data_type == 'housing_price':
+        query = db.session.query(HousingPriceData).filter(
+            HousingPriceData.year >= start_year,
+            HousingPriceData.year <= end_year,
+            HousingPriceData.region.in_(regions)
+        )
+
+        data = query.all()
+        housing_price_monthly_data = []
+        for d in data:
+            for year in range(start_year, end_year + 1):
+                for month in range(1, 13):
+                    if (year == start_year and month < start_month) or (year == end_year and month > end_month):
+                        continue
+                    if d.year == year:
+                        housing_price_monthly_data.append({'month': month, 'year': year, 'region': d.region, 'value': d.price})
+        return housing_price_monthly_data
+
+    return []
+
 @main_bp.route('/get_data')
 def get_data():
-    region = request.args.get('region')
-    month = int(request.args.get('month'))
-    year = int(request.args.get('year'))
+    regions = request.args.get('regions', 'POLSKA').split(',')
+    start_month = request.args.get('start_month')
+    start_year = request.args.get('start_year')
+    end_month = request.args.get('end_month')
+    end_year = request.args.get('end_year')
+    data_type1 = request.args.get('data_types')
+    data_type2 = request.args.get('data_types2', '')
 
-    # Pobierz dane inflacji
-    inflation = db.session.query(Inflation.value).filter_by(year=year, month=month).first()
-    inflation_value = inflation.value if inflation else 'Brak danych'
+    if not (start_month and start_year and end_month and end_year and data_type1):
+        return jsonify({'error': 'Missing required parameters'}), 400
 
-    # Pobierz dane PKB
-    if month in [1, 2, 3]:
-        quarter = 'Q1'
-    elif month in [4, 5, 6]:
-        quarter = 'Q2'
-    elif month in [7, 8, 9]:
-        quarter = 'Q3'
-    else:
-        quarter = 'Q4'
+    start_month = int(start_month)
+    start_year = int(start_year)
+    end_month = int(end_month)
+    end_year = int(end_year)
 
-    gdp = db.session.query(GDP.value).filter_by(year=year, quarter=quarter).first()
-    gdp_value = gdp.value if gdp else 'Brak danych'
-
-    # Pobierz dane bezrobocia
-    unemployment_data = db.session.query(UnemploymentData).filter_by(year=year, month=month, region=region).first()
-    unemployment_value = unemployment_data.unemployment_rate if unemployment_data else 'Brak danych'
-    unemployed_value = unemployment_data.unemployed if unemployment_data else 'Brak danych'
-
-    # Pobierz dane bezrobocia dla wykresu
-    unemployment_data_all = db.session.query(UnemploymentData).filter_by(region=region).all()
-    unemployment_data_list = [
-        {
-            'year': data.year,
-            'month': data.month,
-            'unemployed': data.unemployed,
-            'unemployment_rate': data.unemployment_rate
-        } for data in unemployment_data_all
-    ]
-
-    # Pobierz wszystkie dane inflacji
-    inflation_data_all = db.session.query(Inflation).all()
-    inflation_data_list = [
-        {
-            'year': data.year,
-            'month': data.month,
-            'value': data.value
-        } for data in inflation_data_all
-    ]
-
-    # Pobierz wszystkie dane PKB
-    gdp_data_all = db.session.query(GDP).all()
-    gdp_data_list = [
-        {
-            'year': data.year,
-            'quarter': data.quarter,
-            'value': data.value
-        } for data in gdp_data_all
-    ]
+    data1 = get_data_by_type(data_type1, start_month, start_year, end_month, end_year, regions)
+    data2 = get_data_by_type(data_type2, start_month, start_year, end_month, end_year, regions) if data_type2 else []
 
     data = {
-        'inflation': inflation_value,
-        'gdp': gdp_value,
-        'unemployment_rate': unemployment_value,
-        'unemployed': unemployed_value,
-        'unemployment_data': unemployment_data_list,
-        'inflation_data': inflation_data_list,
-        'gdp_data': gdp_data_list
+        data_type1: data1,
+        data_type2: data2
     }
 
     return jsonify(data)
 
+@main_bp.route('/get_correlation')
+def get_correlation():
+    regions = request.args.get('regions', 'POLSKA').split(',')
+    start_month = request.args.get('start_month')
+    start_year = request.args.get('start_year')
+    end_month = request.args.get('end_month')
+    end_year = request.args.get('end_year')
+    data_type1 = request.args.get('data_types')
+    data_type2 = request.args.get('data_types2', '')
+
+    if not (start_month and start_year and end_month and end_year and data_type1 and data_type2):
+        return jsonify({'error': 'Missing required parameters'}), 400
+
+    start_month = int(start_month)
+    start_year = int(start_year)
+    end_month = int(end_month)
+    end_year = int(end_year)
+
+    data1 = get_data_by_type(data_type1, start_month, start_year, end_month, end_year, regions)
+    data2 = get_data_by_type(data_type2, start_month, start_year, end_month, end_year, regions)
+
+    # Mapowanie miesięcy i lat na wartości
+    data1_values = [d['value'] for d in data1]
+    data2_values = [d['value'] for d in data2]
+
+    # Sprawdzenie, czy długości danych są równe
+    if len(data1_values) != len(data2_values):
+        return jsonify({'error': 'Data lengths do not match'}), 400
+
+    # Obliczenie współczynnika korelacji
+    correlation = np.corrcoef(data1_values, data2_values)[0, 1]
+
+    return jsonify({'correlation': correlation})

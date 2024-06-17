@@ -35,3 +35,15 @@ class GDP(db.Model):
     year = db.Column(db.Integer, nullable=False)
     quarter = db.Column(db.String(2), nullable=False)
     value = db.Column(db.Float, nullable=False)
+
+class PensionData(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    year = db.Column(db.Integer, nullable=False)
+    region = db.Column(db.String(100), nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+
+class HousingPriceData(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    year = db.Column(db.Integer, nullable=False)
+    region = db.Column(db.String(100), nullable=False)
+    price = db.Column(db.Float, nullable=False)
