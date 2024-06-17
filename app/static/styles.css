@@ -11,7 +11,8 @@ body {
     height: 100vh;
 }
 
-.login-container, .register-container {
+.login-container,
+.register-container {
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
@@ -48,54 +49,52 @@ button {
     padding: 10px;
     border: none;
     border-radius: 4px;
-    background-color: #5cb85c;
     color: white;
     font-size: 16px;
     cursor: pointer;
 }
 
-button:hover {
-    background-color: #4cae4c;
-}
 
 .container {
     text-align: center;
     width: 100%;
 }
 
-#map {
-    height: 600px;
-    width: 600px; /* Dodanie szerokości */
-    background-color: #f0f0f0; /* Dodanie tła */
-}
-.leaflet-control-attribution{
+
+.leaflet-control-attribution {
     display: none;
 }
-.row{
+
+.row {
     display: flex;
     flex-direction: row;
     width: 80%;
     justify-content: center;
     align-items: center;
 }
-.meta_data{
+
+.meta_data {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: start;
 
 }
-.meta_data p{
+
+.meta_data p {
     margin: 10px;
 }
-.meta_value{
+
+.meta_value {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: start;
 }
+
 #map {
-    height: 600px;
+    height: 500px;
+    width: 500px;
     background-color: #f0f0f0;
 }
 
@@ -109,8 +108,166 @@ button:hover {
 
 .selectors {
     margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    width: 500px;
 }
 
 .selectors select {
     margin-right: 10px;
+}
+
+.section-top {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+h2 {
+    text-align: center;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    margin-bottom: 10px;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+}
+
+.column select, #fileFormatSelect {
+    width: 200px;
+    padding: 10px 20px;
+    border: 1px solid #00b3b3;
+    border-radius: 20px;
+}
+
+.column label {
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.row:has(#chartContainer) {
+    justify-content: center;
+    width: 100%;
+}
+
+#chartContainer {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+#dataChart {
+    width: 100%;
+    height: 600px;
+    /* Można dostosować wysokość */
+}
+
+.column.cor {
+    width: 300px;
+}
+
+#alertMessage {
+    color: red;
+    display: none;
+    text-align: center;
+}
+
+#correlationContainer {
+    text-align: center;
+}
+
+button {
+    background-color: #00b3b3;
+    border-radius: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+button:hover{
+    background-color: #333;
+}
+
+#formatModal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+}
+
+#formatModal .modal-center {
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #00b3b3;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+#formatModal h3, #formatModal select{
+    margin-bottom: 10px;
+}
+.nav{
+    width: 100%;
+    height: 50px;
+    position: fixed;
+    top:0;
+    z-index: 9999;
+    background-color: #d3d3d3;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: end;
+}
+.nav a{
+    width: 150px;
+    margin-top: 10px;
+}
+.footer{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: #d3d3d3;
+    padding: 30px;
+    position: relative;
+    bottom: 0;
+}
+.center{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.welcome{
+    display: block;
+    justify-self: center;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+.welcome h1{
+    text-align: center;
+    margin-bottom: 50px;
+
+}
+.buttons{
+    width: 150px;
+    margin-bottom: 10px;
 }

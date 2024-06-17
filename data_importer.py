@@ -172,7 +172,7 @@ def import_gdp_data(session):
     print("Dane PKB zaimportowane pomyślnie.")
 
 def import_pension_data(session):
-    pension_file = os.path.join(current_dir, 'WYNA_2860_XTAB_20240616180501.xlsx')
+    pension_file = os.path.join(current_dir, 'renty.xlsx')
     try:
         df = pd.read_excel(pension_file, sheet_name='TABLICA', header=0)
     except Exception as e:
@@ -209,7 +209,7 @@ def import_pension_data(session):
     print("Dane emerytur zaimportowane pomyślnie.")
     
 def import_housing_price_data(session):
-    housing_file = os.path.join(current_dir, 'RYNE_3775_XTAB_20240616180447.xlsx')
+    housing_file = os.path.join(current_dir, 'mieszkania.xlsx')
     try:
         df = pd.read_excel(housing_file, sheet_name='TABLICA', header=0)
     except Exception as e:

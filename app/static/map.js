@@ -30,22 +30,22 @@ var selectedRegions = [];
 
 // Predefined color dictionary for regions
 var regionColors = {
-    'Dolnośląskie': '#FF5733',
-    'Kujawsko-Pomorskie': '#33FF57',
-    'Lubelskie': '#3357FF',
-    'Lubuskie': '#FF33A1',
-    'Łódzkie': '#FF8333',
-    'Małopolskie': '#33FFF8',
-    'Mazowieckie': '#D433FF',
-    'Opolskie': '#A1FF33',
-    'Podkarpackie': '#FF3357',
-    'Podlaskie': '#33A1FF',
-    'Pomorskie': '#A133FF',
-    'Śląskie': '#33FFA1',
-    'Świętokrzyskie': '#FF5733',
-    'Warmińsko-Mazurskie': '#33FF57',
-    'Wielkopolskie': '#3357FF',
-    'Zachodniopomorskie': '#FF33A1'
+    'Dolnośląskie': '#FD2D00',  // czerwony
+    'Kujawsko-Pomorskie': '#128500',  // zielony
+    'Lubelskie': '#003EFF',  // niebieski
+    'Lubuskie': '#FB9995',  // różowy
+    'Łódzkie': '#63322F',  // brązowy
+    'Małopolskie': '#9B00FF',  // fiolet
+    'Mazowieckie': '#CBCE00',  // ciemny żółty
+    'Opolskie': '#84FF00',  // jasnozielony
+    'Podkarpackie': '#E20E6B',  // ciemny różowy
+    'Podlaskie': '#00FDF8',  // cyjan
+    'Pomorskie': '#FD9800',  // pomarańczowy
+    'Śląskie': '#00016C',  // granatowy
+    'Świętokrzyskie': '#FFFB00',  // jasnożółty
+    'Warmińsko-Mazurskie': '#600063',  // ciemny fiolet
+    'Wielkopolskie': '#06A366',  // jakis zielony
+    'Zachodniopomorskie': '#B38BE6'  // wyblakły fiolet
 };
 
 // Podświetlanie województwa po kliknięciu
@@ -110,6 +110,6 @@ fetch(geojsonUrl)
             onEachFeature: onEachFeature
         }).addTo(map);
     })
-    .catch(function(error) {
+    .catch(function (error) {
         console.log("Error loading or parsing data: ", error);
     });

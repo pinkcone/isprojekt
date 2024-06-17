@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,230 +10,165 @@
     <script src="{{ url_for('static', filename='leaflet.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min"></script>
 </head>
+
 <body>
     {% if current_user %}
-    <h1>Witaj z powrotem, {{ current_user['username'] }}!</h1>
-
-    <div class="selectors">
-        <label for="startMonthSelect">Początkowy miesiąc:</label>
-        <select id="startMonthSelect">
-            <option value="1">Styczeń</option>
-            <option value="2">Luty</option>
-            <option value="3">Marzec</option>
-            <option value="4">Kwiecień</option>
-            <option value="5">Maj</option>
-            <option value="6">Czerwiec</option>
-            <option value="7">Lipiec</option>
-            <option value="8">Sierpień</option>
-            <option value="9">Wrzesień</option>
-            <option value="10">Październik</option>
-            <option value="11">Listopad</option>
-            <option value="12">Grudzień</option>
-        </select>
-        <label for="startYearSelect">Początkowy rok:</label>
-        <select id="startYearSelect">
-            <option value="2012">2012</option>
-            <option value="2013">2013</option>
-            <option value="2014">2014</option>
-            <option value="2015">2015</option>
-            <option value="2016">2016</option>
-            <option value="2017">2017</option>
-            <option value="2018">2018</option>
-            <option value="2019">2019</option>
-            <option value="2020">2020</option>
-            <option value="2021">2021</option>
-            <option value="2022">2022</option>
-            <option value="2023">2023</option>
-            <option value="2024">2024</option>
-        </select>
-        <label for="endMonthSelect">Końcowy miesiąc:</label>
-        <select id="endMonthSelect">
-            <option value="1">Styczeń</option>
-            <option value="2">Luty</option>
-            <option value="3">Marzec</option>
-            <option value="4">Kwiecień</option>
-            <option value="5">Maj</option>
-            <option value="6">Czerwiec</option>
-            <option value="7">Lipiec</option>
-            <option value="8">Sierpień</option>
-            <option value="9">Wrzesień</option>
-            <option value="10">Październik</option>
-            <option value="11">Listopad</option>
-            <option value="12">Grudzień</option>
-        </select>
-        <label for="endYearSelect">Końcowy rok:</label>
-        <select id="endYearSelect">
-            <option value="2012">2012</option>
-            <option value="2013">2013</option>
-            <option value="2014">2014</option>
-            <option value="2015">2015</option>
-            <option value="2016">2016</option>
-            <option value="2017">2017</option>
-            <option value="2018">2018</option>
-            <option value="2019">2019</option>
-            <option value="2020">2020</option>
-            <option value="2021">2021</option>
-            <option value="2022">2022</option>
-            <option value="2023">2023</option>
-            <option value="2024">2024</option>
-        </select>
-        <label for="dataTypeSelect">Rodzaj danych 1:</label>
-        <select id="dataTypeSelect">
-            <option value="unemployment_rate">Stopa bezrobocia</option>
-            <option value="unemployed">Liczba bezrobotnych</option>
-            <option value="gdp">PKB</option>
-            <option value="inflation">Inflacja</option>
-            <option value="pension">Emerytury</option>
-            <option value="housing_price">Ceny mieszkań</option>
-        </select>
-        <label for="dataTypeSelect2">Rodzaj danych 2:</label>
-        <select id="dataTypeSelect2">
-            <option value="">-- Wybierz --</option>
-            <option value="unemployment_rate">Stopa bezrobocia</option>
-            <option value="unemployed">Liczba bezrobotnych</option>
-            <option value="gdp">PKB</option>
-            <option value="inflation">Inflacja</option>
-            <option value="pension">Emerytury</option>
-            <option value="housing_price">Ceny mieszkań</option>
-        </select>
+    <div class="nav">
+        <a href="{{ url_for('auth.logout') }}"><button>Wyloguj</button></a>
     </div>
-    <div class="row">
-        <div id="map"></div>
-        <div id="info"></div>
-        <div id="chartContainer">
-            <div id="dataChart"></div>
-            <div id="correlationContainer"></div>
+    <div style="height: 70px;"></div>
+    <h2>Wybierz dane:</h1>
+        <div class="section-top">
+            <div id="map"></div>
+            <div class="selectors">
+                <div class="row">
+                    <div class="column">
+                        <label for="startMonthSelect">Początkowy miesiąc:</label>
+                        <select id="startMonthSelect">
+                            <option value="1">Styczeń</option>
+                            <option value="2">Luty</option>
+                            <option value="3">Marzec</option>
+                            <option value="4">Kwiecień</option>
+                            <option value="5">Maj</option>
+                            <option value="6">Czerwiec</option>
+                            <option value="7">Lipiec</option>
+                            <option value="8">Sierpień</option>
+                            <option value="9">Wrzesień</option>
+                            <option value="10">Październik</option>
+                            <option value="11">Listopad</option>
+                            <option value="12">Grudzień</option>
+                        </select>
+                    </div>
+                    <div class="column">
+                        <label for="startYearSelect">Początkowy rok:</label>
+                        <select id="startYearSelect">
+                            <option value="2012">2012</option>
+                            <option value="2013">2013</option>
+                            <option value="2014">2014</option>
+                            <option value="2015">2015</option>
+                            <option value="2016">2016</option>
+                            <option value="2017">2017</option>
+                            <option value="2018">2018</option>
+                            <option value="2019">2019</option>
+                            <option value="2020">2020</option>
+                            <option value="2021">2021</option>
+                            <option value="2022">2022</option>
+                            <option value="2023">2023</option>
+                            <option value="2024">2024</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <label for="endMonthSelect">Końcowy miesiąc:</label>
+                        <select id="endMonthSelect">
+                            <option value="1">Styczeń</option>
+                            <option value="2">Luty</option>
+                            <option value="3">Marzec</option>
+                            <option value="4">Kwiecień</option>
+                            <option value="5">Maj</option>
+                            <option value="6">Czerwiec</option>
+                            <option value="7">Lipiec</option>
+                            <option value="8">Sierpień</option>
+                            <option value="9">Wrzesień</option>
+                            <option value="10">Październik</option>
+                            <option value="11">Listopad</option>
+                            <option value="12">Grudzień</option>
+                        </select>
+                    </div>
+                    <div class="column">
+                        <label for="endYearSelect">Końcowy rok:</label>
+                        <select id="endYearSelect">
+                            <option value="2012">2012</option>
+                            <option value="2013" selected>2013</option>
+                            <option value="2014">2014</option>
+                            <option value="2015">2015</option>
+                            <option value="2016">2016</option>
+                            <option value="2017">2017</option>
+                            <option value="2018">2018</option>
+                            <option value="2019">2019</option>
+                            <option value="2020">2020</option>
+                            <option value="2021">2021</option>
+                            <option value="2022">2022</option>
+                            <option value="2023">2023</option>
+                            <option value="2024">2024</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <label for="dataTypeSelect">Rodzaj danych 1:</label>
+                        <select id="dataTypeSelect">
+                            <option value="unemployment_rate">Stopa bezrobocia</option>
+                            <option value="unemployed">Liczba bezrobotnych</option>
+                            <option value="gdp">PKB</option>
+                            <option value="inflation">Inflacja</option>
+                            <option value="pension">Emerytury</option>
+                            <option value="housing_price">Ceny mieszkań</option>
+                        </select>
+                    </div>
+                    <div class="column">
+                        <label for="dataTypeSelect2">Rodzaj danych 2:</label>
+                        <select id="dataTypeSelect2">
+                            <option value="">-- Wybierz --</option>
+                            <option value="unemployment_rate">Stopa bezrobocia</option>
+                            <option value="unemployed">Liczba bezrobotnych</option>
+                            <option value="gdp">PKB</option>
+                            <option value="inflation">Inflacja</option>
+                            <option value="pension">Emerytury</option>
+                            <option value="housing_price">Ceny mieszkań</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+        <div class="row">
+            <div id="info"></div>
+            <div class="row">
+                <div class="column cor">
+                    <button id="calculateCorrelationButton">Oblicz Korelację</button>
+                    <div id="alertMessage"></div>
+                    <div id="correlationContainer"></div>
+                </div>
+            </div>
+            <div class="column cor">
+                <button id="downloadDataButton">Pobierz dane</button>
+            </div>
+        </div>
+        <div class="row">
+            <div id="chartContainer">
+                <div id="dataChart"></div>
+            </div>
+        </div>
+        <div id="formatModal" style="display:none;">
+            <div class="modal-center">
+                <h3>Wybierz format pliku:</h3>
+                <select id="fileFormatSelect">
+                    <option value="csv">CSV</option>
+                    <option value="xml">XML</option>
+                    <option value="json">JSON</option>
+                </select>
+                <button id="confirmDownloadButton">Pobierz</button>
+                <button id="closeModalButton">Zamknij</button>
+            </div>
+        </div>
 
-    <a href="{{ url_for('auth.logout') }}"><button>Wyloguj</button></a>
-    <script>
-        function updateChart() {
-            const startMonth = document.getElementById('startMonthSelect').value;
-            const startYear = document.getElementById('startYearSelect').value;
-            const endMonth = document.getElementById('endMonthSelect').value;
-            const endYear = document.getElementById('endYearSelect').value;
-            const dataType1 = document.getElementById('dataTypeSelect').value;
-            const dataType2 = document.getElementById('dataTypeSelect2').value;
-            const region = selectedRegions.length ? selectedRegions.join(',') : 'POLSKA';
 
-            console.log('Fetching data for:', {
-                startMonth, startYear, endMonth, endYear, dataType1, dataType2, region
-            });
+        <script src="{{ url_for('static', filename='main.js') }}"></script>
+        <script src="{{ url_for('static', filename='map.js') }}"></script>
+        <script src="{{ url_for('static', filename='download.js') }}"></script>
+        <div class="footer">© DudekDycha 2024</div>
+        {% else %}
+        <div class="welcome">
+            <h1>Witaj na stronie naszego projektu</h1>
+            <div class="buttons">
+                <a href="{{ url_for('auth.login') }}"><button>Zaloguj się</button></a>
+                <a href="{{ url_for('auth.register') }}"><button>Zarejestruj się</button></a>
+            </div>
+        </div>
+        {% endif %}
 
-            resetChart();
 
-            fetch(`/get_data?regions=${region}&start_month=${startMonth}&start_year=${startYear}&end_month=${endMonth}&end_year=${endYear}&data_types=${dataType1}&data_types2=${dataType2}`)
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Data received:', data);
-                    drawChart(data, dataType1, dataType2);
-                });
-
-            if (dataType2) {
-                fetch(`/get_correlation?regions=${region}&start_month=${startMonth}&start_year=${startYear}&end_month=${endMonth}&end_year=${endYear}&data_types=${dataType1}&data_types2=${dataType2}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Correlation received:', data);
-                        displayCorrelation(data.correlation);
-                    });
-            }
-        }
-
-        function drawChart(data, dataType1, dataType2) {
-            const chartData1 = data[dataType1];
-            const chartData2 = data[dataType2] || [];
-
-            const regions1 = [...new Set(chartData1.map(entry => entry.region))];
-            const plotData1 = regions1.map(region => {
-                const regionData = chartData1.filter(entry => entry.region === region);
-
-                let labels = [];
-                let values = [];
-
-                labels = regionData.map(entry => `${entry.month}/${entry.year}`);
-                values = regionData.map(entry => entry.value);
-
-                return {
-                    x: labels,
-                    y: values,
-                    type: 'scatter',
-                    mode: 'lines+markers',
-                    name: `${region} (${dataType1})`,
-                    marker: { color: getRandomColor() }
-                };
-            });
-
-            const regions2 = [...new Set(chartData2.map(entry => entry.region))];
-            const plotData2 = regions2.map(region => {
-                const regionData = chartData2.filter(entry => entry.region === region);
-
-                let labels = [];
-                let values = [];
-
-                labels = regionData.map(entry => `${entry.month}/${entry.year}`);
-                values = regionData.map(entry => entry.value);
-
-                return {
-                    x: labels,
-                    y: values,
-                    type: 'scatter',
-                    mode: 'lines+markers',
-                    name: `${region} (${dataType2})`,
-                    yaxis: 'y2',
-                    marker: { color: getRandomColor() }
-                };
-            });
-
-            const layout = {
-                title: `${dataType1.toUpperCase()} & ${dataType2 ? dataType2.toUpperCase() : ''}`,
-                xaxis: { title: 'Date' },
-                yaxis: { title: dataType1.toUpperCase() },
-                yaxis2: {
-                    title: dataType2.toUpperCase(),
-                    overlaying: 'y',
-                    side: 'right'
-                }
-            };
-
-            const plotData = plotData1.concat(plotData2);
-            Plotly.newPlot('dataChart', plotData, layout);
-        }
-
-        function resetChart() {
-            Plotly.purge('dataChart');
-        }
-
-        function displayCorrelation(correlation) {
-            const correlationContainer = document.getElementById('correlationContainer');
-            correlationContainer.innerHTML = `<h3>Współczynnik korelacji: ${correlation.toFixed(2)}</h3>`;
-        }
-
-        function getRandomColor() {
-            const letters = '0123456789ABCDEF';
-            let color = '#';
-            for (let i = 0; i < 6; i++) {
-                color += letters[Math.floor(Math.random() * 16)];
-            }
-            return color;
-        }
-
-        document.addEventListener('DOMContentLoaded', function () {
-            const selectors = document.querySelectorAll('#startMonthSelect, #startYearSelect, #endMonthSelect, #endYearSelect, #dataTypeSelect, #dataTypeSelect2');
-
-            selectors.forEach(select => {
-                select.addEventListener('change', updateChart);
-            });
-
-            updateChart(); // Wywołaj wykres przy pierwszym załadowaniu
-        });
-    </script>
-    <script src="{{ url_for('static', filename='map.js') }}"></script>
-    {% else %}
-    <h1>Witaj na stronie naszego projektu</h1>
-    <a href="{{ url_for('auth.login') }}"><button>Zaloguj się</button></a>
-    <a href="{{ url_for('auth.register') }}"><button>Zarejestruj się</button></a>
-    {% endif %}
 </body>
-</html>
 
+</html>

@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, make_response
 from app.models import User
 from app import db
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, verify_jwt_in_request
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, unset_jwt_cookies, verify_jwt_in_request
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -57,6 +57,6 @@ def login():
 @jwt_required()
 def logout():
     response = redirect(url_for('main.home'))
-    response.delete_cookie('access_token_cookie')
+    unset_jwt_cookies(response)
     flash('Logged out successfully', 'success')
     return response
